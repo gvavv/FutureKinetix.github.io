@@ -284,3 +284,5 @@ button,input,textarea,select{font:inherit}
   .footer-bottom{display:block}
   .footer-bottom span{margin-top:8px}
 }
+.footer .brand{display:flex;margin-top:0}
+.footer .brand-copy small{color:#8ea9b5}
