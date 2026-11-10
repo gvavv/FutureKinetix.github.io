@@ -1252,3 +1252,102 @@ td {
     font-size:var(--type-xs)
   }
 }
+
+/* Expanded editorial pages and equipment catalogue. */
+.page-intro {
+  padding-block: var(--space-9);
+  max-width: var(--container);
+}
+.page-intro h1 { max-width: 1000px; margin-bottom: var(--space-6); }
+.page-intro .lead { max-width: 720px; margin-bottom: var(--space-6); }
+.page-intro--split { display: grid; grid-template-columns: 1.1fr 1fr; align-items: center; gap: var(--space-8); }
+.editorial-media { min-width: 0; }
+.editorial-media img { width: 100%; height: 440px; object-fit: contain; background: var(--white); border-radius: var(--radius); }
+.editorial-media figcaption, .media-credit { font-size: var(--type-xs); color: var(--muted); margin-top: 12px; line-height: 1.6; }
+.media-credit a { text-decoration: underline; text-underline-offset: 3px; }
+.hero__visual--industry .hero__robot { aspect-ratio: 1.3; height: auto; max-height: 450px; }
+.editorial-grid { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 24px; margin-top: var(--space-7); }
+.editorial-card { padding: var(--space-6); border: 1px solid var(--line); display: flex; flex-direction: column; min-width: 0; background: var(--white); border-radius: var(--radius); }
+.editorial-card h3 { margin-bottom: 20px; }
+.editorial-card p { font-size: var(--type-base); }
+.editorial-card .text-link { align-self: start; margin-top: auto; padding-top: 20px; }
+.plain-list { list-style: none; color: var(--muted); font-size: var(--type-sm); margin-bottom: 24px; }
+.plain-list li { border-top: 1px solid var(--line); padding-block: 12px; }
+.brief-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 32px; margin-top: 48px; }
+.brief-grid p { border-top: 1px solid var(--line); padding-top: 24px; }
+.text-columns { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; margin-top: 40px; font-size: var(--type-lg); }
+.process--wide { max-width: 900px; margin-top: 48px; }
+.faq-list { max-width: 900px; margin-top: 40px; }
+.faq-list details { padding-block: 24px; border-top: 1px solid var(--line); }
+.faq-list summary { cursor: pointer; font-size: var(--type-lg); }
+.faq-list p { margin-top: 20px; margin-bottom: 0; }
+.service-strip { padding-block: 72px; background: #e4ebdc; border-block: 1px solid var(--line); }
+.service-strip>.container { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center; }
+.service-strip .eyebrow { margin-bottom: 24px; }
+.service-strip p { font-size: var(--type-lg); }
+.gallery-grid { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 24px; }
+.gallery-grid figure { min-width: 0; }
+.gallery-grid img { width: 100%; height: 300px; object-fit: contain; background: var(--white); border-radius: var(--radius); }
+.gallery-grid figcaption { font-size: var(--type-sm); color: var(--muted); margin-top: 16px; }
+.accessory-cards { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 24px; }
+.attachment-card { min-width: 0; padding: 28px; background: var(--white); border: 1px solid var(--line); border-radius: var(--radius); }
+.attachment-icon { display: block; width: 70px; height: 70px; margin-bottom: 24px; stroke-width: 1; color: var(--green); }
+.attachment-card h3 { margin-bottom: 16px; }
+.attachment-card p { font-size: var(--type-sm); }
+.attachment-model { color: var(--ink); font-weight: 600; }
+.attachment-price { margin-block: 24px 12px; font-size: 30px; letter-spacing: -.04em; }
+.source-details { font-size: var(--type-xs); }
+.source-details summary { cursor: pointer; }
+.source-details ul { padding-left: 16px; margin-top: 12px; }
+.source-details li { padding-block: 4px; }
+.source-details a { text-decoration: underline; }
+.price-method { border-block: 1px solid var(--line); padding-block: 24px; margin-block: 32px; }
+.price-method summary { cursor: pointer; font-size: var(--type-lg); }
+.price-method p { max-width: 950px; margin-top: 24px; }
+.table-scroll { overflow-x: auto; }
+.accessory-table { min-width: 580px; }
+.accessory-table caption { text-align: left; font-size: var(--type-lg); margin-bottom: 24px; }
+.accessory-table th { width: 55%; }
+.accessory-table th strong { display: block; color: var(--ink); font-weight: 500; }
+.accessory-table th span { display: block; margin-top: 8px; }
+.accessory-table td { padding-inline: 12px; }
+.accessory-table td:nth-child(2) { white-space: nowrap; }
+.footer__links { flex-wrap: wrap; align-content: start; }
+.nav { gap: 22px; }
+@media(max-width:1199px) {
+  .menu-toggle { display: flex; }
+  .nav { display: none; position: absolute; top: 92px; left: 0; right: 0; background: var(--paper); padding: 24px var(--gutter); border-bottom: 1px solid var(--line); box-shadow: var(--shadow); }
+  .nav.is-open { display: flex; flex-direction: column; gap: 8px; align-items: stretch; }
+  .nav>a { min-height: 44px; }
+  .editorial-grid { grid-template-columns: 1fr 1fr; }
+  .attachment-card { padding: 20px; }
+  .attachment-card h3 { font-size: 23px; }
+  .page-intro--split { gap: 32px; }
+}
+@media(max-width:999px) {
+  .nav { top: 76px; }
+  .page-intro--split { grid-template-columns: 1fr; }
+  .editorial-media img { height: 400px; }
+  .accessory-cards { grid-template-columns: 1fr; }
+  .gallery-grid img { height: 230px; }
+}
+@media(max-width:699px) {
+  .nav { top: 72px; }
+  .editorial-grid, .brief-grid, .text-columns, .service-strip>.container, .gallery-grid { grid-template-columns: 1fr; gap: 24px; }
+  .page-intro { padding-block: 48px; }
+  .page-intro h1 { font-size: clamp(2.4rem,9vw,3.5rem); }
+  .page-intro .lead { font-size: 17px; }
+  .editorial-media img { height: 330px; }
+  .editorial-card { padding: 24px; }
+  .service-strip { padding-block: 48px; }
+  .gallery-grid img { height: 300px; }
+  .hero__visual--industry .hero__robot { max-height: 320px; }
+}
+.accessory-table { table-layout: fixed; }
+.accessory-table th { width: auto; }
+.accessory-table th:nth-child(1) { width: 50%; }
+.accessory-table th:nth-child(2) { width: 18%; }
+.accessory-table th:nth-child(3) { width: 32%; }
+.source-details ul { overflow-wrap: anywhere; }
+.service .editorial-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
+@media(max-width:699px) { .service .editorial-grid { grid-template-columns: 1fr; } }

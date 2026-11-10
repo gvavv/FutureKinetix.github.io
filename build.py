@@ -1,40 +1,96 @@
 #!/usr/bin/env python3
-"""Dependency-free static build: python3 build.py; preview dist/ locally."""
+"""Dependency-free GitHub Pages build. Output: dist/."""
 from pathlib import Path
 from string import Template
 from html import escape
 from html.parser import HTMLParser
-import json, shutil
+from statistics import mean
+import json
+import shutil
+
 ROOT = Path(__file__).resolve().parent
+PAGES = [
+    ('index.html', 'home.html', 'FutureKinetix — робототехника и автоматизация', 'Роботизированные системы, индивидуальная автоматизация, установка и сервис.'),
+    ('yarbo.html', 'yarbo.html', 'Yarbo и навесное оборудование | FutureKinetix', 'Модульные роботы Yarbo, тележки, щётки, отвалы, российские ценовые ориентиры и обслуживание.'),
+    ('products.html', 'products.html', 'Роботизированные системы | FutureKinetix', 'Роботы для доставки, склада, сервиса, уборки и производства.'),
+    ('automation.html', 'automation.html', 'Индивидуальная автоматизация | FutureKinetix', 'Разработка систем роботизации, технического зрения и управления роботами.'),
+    ('humanoids.html', 'humanoids.html', 'Гуманоидные роботы | FutureKinetix', 'Подбор гуманоидных платформ, прикладные сценарии и интеграция.'),
+    ('service.html', 'service.html', 'Установка, настройка и обслуживание роботов | FutureKinetix', 'Услуги установки, настройки, диагностики, обслуживания и технической поддержки.'),
+    ('company.html', 'company.html', 'О компании | FutureKinetix', 'Поставка роботов, инженерная разработка и сопровождение роботизированных систем.'),
+    ('contacts.html', 'contacts.html', 'Контакты | FutureKinetix', 'Связаться с FutureKinetix по вопросам оборудования, разработки и сервиса.'),
+]
+NAVIGATION = [('yarbo.html','Yarbo'), ('products.html','Роботы'), ('automation.html','Решения'), ('service.html','Сервис'), ('company.html','Компания'), ('contacts.html','Контакты')]
+ARROW = '<svg class="arrow-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 19 19 5M5 5h14v14"/></svg>'
 
 def render(name, **values):
-    return Template((ROOT / 'src' / name).read_text()).substitute(**values)
+    return Template((ROOT/'src'/name).read_text()).substitute(**values)
+
+def rub(value):
+    return f'{value:,.0f}'.replace(',', '\u00a0') + ' ₽'
+
+def price_label(item):
+    average = round(mean(item['prices']) / 100) * 100 if len(item['prices']) > 1 else item['prices'][0]
+    return ('≈ ' if len(item['prices']) > 1 else '') + rub(average)
+
+def source_details(item):
+    sources = ''.join(f'<li><a href="{escape(url)}" target="_blank" rel="noopener">Предложение {n+1} ↗</a> — {rub(item["prices"][n])}</li>' for n,url in enumerate(item['sources']))
+    label = f'Среднее по {len(item["prices"])} предложениям' if len(item['prices']) > 1 else 'Цена одного каталога'
+    return f'<details class="source-details"><summary>{label}: источники</summary><ul>{sources}</ul></details>'
+
+def accessory_content(data):
+    icons = {
+        'cart': 'M3 9h23l-3 14H7zM2 5l4 4M9 23v4m13-4v4',
+        'brush': 'M4 9h22v10H4zM8 19l-3 7m8-7-1 7m7-7 1 7m5-7 3 7',
+        'plow': 'M5 8Q15 3 27 8v17Q15 20 5 25zM15 6v17',
+    }
+    cards = []
+    rows = []
+    for i,item in enumerate(data['items']):
+        if i < 3:
+            icon = f'<svg class="attachment-icon" viewBox="0 0 32 32" aria-hidden="true"><path d="{icons[item["icon"]]}"/></svg>'
+            cards.append(f'<article class="attachment-card">{icon}<span class="eyebrow">{escape(item["kind"])}</span><h3>{escape(item["name"])}</h3><p class="attachment-model">{escape(item["model"])}</p><p>{escape(item["description"])}</p><div class="attachment-price">{price_label(item)}</div>{source_details(item)}<a class="text-link" href="#contact">Подобрать оснастку ↗</a></article>')
+        else:
+            rows.append(f'<tr><th scope="row"><strong>{escape(item["name"])}</strong><span>{escape(item["description"])}</span></th><td>{price_label(item)}</td><td>{source_details(item)}</td></tr>')
+    return ''.join(cards), ''.join(rows)
 
 def main():
-    products=json.loads((ROOT/'data/products.json').read_text())
-    cards=[]
+    products = json.loads((ROOT/'data/products.json').read_text())
+    accessories = json.loads((ROOT/'data/accessories.json').read_text())
+    cards = []
     for c in products['configurations']:
-        c={k:escape(v) for k,v in c.items()}
-        cards.append(f'''<article class="config-card"><div class="config-card__media"><img src="assets/site/images/{c['image']}" alt="{c['name']}" loading="lazy"></div><div class="config-card__body"><span class="eyebrow">{c['title']}</span><h3>{c['name']}</h3><p>{c['description']}</p><a class="text-link" href="#contact">Запросить подбор ↗</a></div></article>''')
-    modules=[]
+        c = {k:escape(v) for k,v in c.items()}
+        cards.append(f'<article class="config-card"><div class="config-card__media"><img src="assets/site/images/{c["image"]}" alt="{c["name"]}" loading="lazy"></div><div class="config-card__body"><span class="eyebrow">{c["title"]}</span><h3>{c["name"]}</h3><p>{c["description"]}</p><a class="text-link" href="#contact">Запросить подбор ↗</a></div></article>')
+    modules = []
     for c in products['modules']:
-        c={k:escape(v) for k,v in c.items()}
-        modules.append(f'''<article class="module-card"><div class="module-card__media"><img src="assets/site/images/{c['image']}" alt="Модуль {c['name']}" loading="lazy"></div><div><span class="eyebrow">{c['season']}</span><h3>{c['name']}</h3><p>{c['description']}</p></div></article>''')
-    specs=''.join(f'<tr><th scope="row">{escape(k)}</th><td>{escape(v)}</td></tr>' for k,v in products['specifications'])
-    pages=[('index.html','home.html','home','FutureKinetix — робототехника и автоматизация','Роботы Yarbo для частных территорий, роботизированные системы для бизнеса и индивидуальная автоматизация.'),('yarbo.html','yarbo.html','product','Yarbo — модульные роботы | FutureKinetix','Yarbo Snow Blower, модульная система, конфигурации и подбор оборудования для вашего участка.')]
-    dist=ROOT/'dist'
+        c = {k:escape(v) for k,v in c.items()}
+        modules.append(f'<article class="module-card"><div class="module-card__media"><img src="assets/site/images/{c["image"]}" alt="{c["name"]}" loading="lazy"></div><div><span class="eyebrow">{c["season"]}</span><h3>{c["name"]}</h3><p>{c["description"]}</p></div></article>')
+    specs = ''.join(f'<tr><th scope="row">{escape(k)}</th><td>{escape(v)}</td></tr>' for k,v in products['specifications'])
+    accessory_cards, accessory_rows = accessory_content(accessories)
+    dist = ROOT/'dist'
     if dist.exists(): shutil.rmtree(dist)
-    dist.mkdir(); shutil.copytree(ROOT/'assets/site',dist/'assets/site'); (dist/'.nojekyll').touch()
-    for path,source,page,title,description in pages:
-        content=render(source,configurations=''.join(cards),modules=''.join(modules),specifications=specs)
-        html=render('layout.html',title=title,description=description,page=page,content=content,yarbo_active='aria-current="page"' if page=='product' else '')
-        html=html.replace('↗', '<svg class="arrow-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 19 19 5M5 5h14v14"/></svg>').replace('↓', '<svg class="arrow-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v18M5 14l7 7 7-7"/></svg>')
-        (ROOT/path).write_text(html); (dist/path).write_text(html)
+    dist.mkdir()
+    shutil.copytree(ROOT/'assets/site', dist/'assets/site')
+    (dist/'.nojekyll').touch()
+    for path,source,title,description in PAGES:
+        nav = ''.join(f'<a href="{href}"'+(' aria-current="page"' if path == href else '')+f'>{label}</a>' for href,label in NAVIGATION)
+        content = render(source, configurations=''.join(cards), modules=''.join(modules), specifications=specs, accessory_cards=accessory_cards, accessory_rows=accessory_rows, price_method=escape(accessories['method']), price_date='10.11.2026')
+        html = render('layout.html', title=title, description=description, page=path[:-5], content=content, navigation=nav)
+        html = html.replace('↗', ARROW).replace('↓', '<svg class="arrow-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v18M5 14l7 7 7-7"/></svg>')
+        (ROOT/path).write_text(html)
+        (dist/path).write_text(html)
+    validate(dist)
+    print(f'Built and checked {len(PAGES)} pages in dist/.')
+
+def validate(dist):
     class Validator(HTMLParser):
-        def handle_starttag(self,tag,attrs):
-            for k,v in attrs:
-                if k in ('href','src') and v and not v.startswith(('http','mailto:','tel:','#','data:')):
-                    assert (dist/v.split('#')[0]).exists(),v
-    for path,*_ in pages: Validator().feed((dist/path).read_text())
-    print('Built and checked 2 pages in dist/. Legacy pages remain in Git and the repository root.')
-if __name__=='__main__':main()
+        def handle_starttag(self, tag, attrs):
+            for key,value in attrs:
+                if key in ('href','src') and value and not value.startswith(('http','mailto:','tel:','#','data:')):
+                    from urllib.parse import urlsplit
+                    target = urlsplit(value).path
+                    assert (dist/target).exists(), value
+    for path,*_ in PAGES:
+        Validator().feed((dist/path).read_text())
+
+if __name__ == '__main__':
+    main()

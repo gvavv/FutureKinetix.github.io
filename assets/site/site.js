@@ -5,7 +5,7 @@ toggle.addEventListener('click', () => { const open = toggle.getAttribute('aria-
 nav.addEventListener('click', event => { if (event.target.closest('a')) closeMenu(); });
 document.addEventListener('keydown', event => { if (event.key === 'Escape') { if (toggle.getAttribute('aria-expanded') === 'true') { closeMenu(); toggle.focus(); } } });
 document.addEventListener('click', event => { if (!event.target.closest('.header')) closeMenu(); });
-matchMedia('(min-width: 1000px)').addEventListener('change', closeMenu);
+matchMedia('(min-width: 1200px)').addEventListener('change', closeMenu);
 document.querySelectorAll('[data-copy]').forEach(button => button.addEventListener('click', async () => {
   const status = document.querySelector('.copy-status');
   try { await navigator.clipboard.writeText(button.dataset.copy); status.textContent = 'Email скопирован'; }
