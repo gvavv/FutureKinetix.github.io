@@ -29,13 +29,18 @@ def rub(value):
     return f'{value:,.0f}'.replace(',', '\u00a0') + ' ₽'
 
 def price_label(item):
+    if not item['prices']:
+        return 'По запросу'
     average = round(mean(item['prices']) / 100) * 100 if len(item['prices']) > 1 else item['prices'][0]
     return ('≈ ' if len(item['prices']) > 1 else '') + rub(average)
 
 def source_details(item):
-    sources = ''.join(f'<li><a href="{escape(url)}" target="_blank" rel="noopener">Предложение {n+1} ↗</a> — {rub(item["prices"][n])}</li>' for n,url in enumerate(item['sources']))
-    label = f'Среднее по {len(item["prices"])} предложениям' if len(item['prices']) > 1 else 'Цена одного каталога'
-    return f'<details class="source-details"><summary>{label}: источники</summary><ul>{sources}</ul></details>'
+    if not item['prices']:
+        sources = ''.join(f'<li><a href="{escape(url)}" target="_blank" rel="noopener">Открыть каталог ↗</a></li>' for url in item['sources'])
+        return f'<details class="source-details"><summary>Цена в каталоге не указана</summary><ul>{sources}</ul></details>'
+    sources = ''.join(f'<li><a href="{escape(url)}" target="_blank" rel="noopener">Предложение {n+1} ↗</a> — {rub(item["prices"][n])}</li>' for n,url in enumerate(item['sources'][:len(item['prices'])]))
+    label = f'Среднее по {len(item["prices"])} предложениям' if len(item['prices']) > 1 else 'Цена каталога'
+    return f'<details class="source-details"><summary>{label}: источник</summary><ul>{sources}</ul></details>'
 
 def accessory_content(data):
     icons = {
@@ -53,19 +58,33 @@ def accessory_content(data):
             rows.append(f'<tr><th scope="row"><strong>{escape(item["name"])}</strong><span>{escape(item["description"])}</span></th><td>{price_label(item)}</td><td>{source_details(item)}</td></tr>')
     return ''.join(cards), ''.join(rows)
 
+def catalog_product_content(data):
+    cards = []
+    for item in data['catalog_products']:
+        cards.append(
+            f'<article class="catalog-card">'
+            f'<div class="catalog-card__media"><img src="assets/site/images/{escape(item["image"])}" alt="{escape(item["name"])}" loading="lazy"></div>'
+            f'<div class="catalog-card__body"><span class="eyebrow">{escape(item["category"])} · {escape(item["tag"])}</span>'
+            f'<h3>{escape(item["name"])}</h3><p>{escape(item["description"])}</p>'
+            f'<div class="catalog-card__meta"><span>Арт. {escape(item["article"])}</span><strong>{rub(item["price"])}</strong></div>'
+            f'<a class="text-link" href="#contact">Запросить подбор ↗</a></div></article>'
+        )
+    return ''.join(cards)
+
 def main():
     products = json.loads((ROOT/'data/products.json').read_text())
     accessories = json.loads((ROOT/'data/accessories.json').read_text())
     cards = []
     for c in products['configurations']:
-        c = {k:escape(v) for k,v in c.items()}
-        cards.append(f'<article class="config-card"><div class="config-card__media"><img src="assets/site/images/{c["image"]}" alt="{c["name"]}" loading="lazy"></div><div class="config-card__body"><span class="eyebrow">{c["title"]}</span><h3>{c["name"]}</h3><p>{c["description"]}</p><a class="text-link" href="#contact">Запросить подбор ↗</a></div></article>')
+        c = {k:(escape(v) if isinstance(v, str) else v) for k,v in c.items()}
+        cards.append(f'<article class="config-card"><div class="config-card__media"><img src="assets/site/images/{c["image"]}" alt="{c["name"]}" loading="lazy"></div><div class="config-card__body"><span class="eyebrow">{c["title"]}</span><h3>{c["name"]}</h3><p>{c["description"]}</p><div class="config-card__price">{rub(c["price"])}</div><p class="attachment-model">Арт. {c["article"]}</p><a class="text-link" href="#contact">Запросить подбор ↗</a></div></article>')
     modules = []
     for c in products['modules']:
-        c = {k:escape(v) for k,v in c.items()}
-        modules.append(f'<article class="module-card"><div class="module-card__media"><img src="assets/site/images/{c["image"]}" alt="{c["name"]}" loading="lazy"></div><div><span class="eyebrow">{c["season"]}</span><h3>{c["name"]}</h3><p>{c["description"]}</p></div></article>')
+        c = {k:(escape(v) if isinstance(v, str) else v) for k,v in c.items()}
+        modules.append(f'<article class="module-card"><div class="module-card__media"><img src="assets/site/images/{c["image"]}" alt="{c["name"]}" loading="lazy"></div><div><span class="eyebrow">{c["season"]}</span><h3>{c["name"]}</h3><p>{c["description"]}</p><div class="attachment-price">{rub(c["price"])}</div><p class="attachment-model">Арт. {c["article"]}</p></div></article>')
     specs = ''.join(f'<tr><th scope="row">{escape(k)}</th><td>{escape(v)}</td></tr>' for k,v in products['specifications'])
     accessory_cards, accessory_rows = accessory_content(accessories)
+    catalog_products = catalog_product_content(products)
     dist = ROOT/'dist'
     if dist.exists(): shutil.rmtree(dist)
     dist.mkdir()
@@ -73,7 +92,7 @@ def main():
     (dist/'.nojekyll').touch()
     for path,source,title,description in PAGES:
         nav = ''.join(f'<a href="{href}"'+(' aria-current="page"' if path == href else '')+f'>{label}</a>' for href,label in NAVIGATION)
-        content = render(source, configurations=''.join(cards), modules=''.join(modules), specifications=specs, accessory_cards=accessory_cards, accessory_rows=accessory_rows, price_method=escape(accessories['method']), price_date='10.11.2026')
+        content = render(source, configurations=''.join(cards), modules=''.join(modules), catalog_products=catalog_products, specifications=specs, accessory_cards=accessory_cards, accessory_rows=accessory_rows, price_method=escape(accessories['method']), price_date=escape(products['checked_at']))
         html = render('layout.html', title=title, description=description, page=path[:-5], content=content, navigation=nav)
         html = html.replace('↗', ARROW).replace('↓', '<svg class="arrow-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v18M5 14l7 7 7-7"/></svg>')
         (ROOT/path).write_text(html)
