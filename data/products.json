@@ -1,70 +1,155 @@
 {
-  "source": "https://yarbo-russia.ru/snowblower",
+  "source": "https://zimani.ru/category/mnogofunkcionalnye-roboty-yarbo/",
+  "checked_at": "15.11.2026",
   "configurations": [
+    {
+      "title": "Базовая платформа",
+      "name": "Yarbo Core",
+      "article": "YARBO-CORE",
+      "price": 590000,
+      "description": "Беспроводная роботизированная база Yarbo для подключения совместимого навесного оборудования.",
+      "image": "yarbo-core.jpg",
+      "tag": "База"
+    },
     {
       "title": "Зима",
       "name": "Yarbo Snow Blower",
-      "description": "Роботизированная база и снегоуборочный модуль. Для дорожек, парковки и подъезда к дому.",
-      "image": "yarbo-snow.jpg",
-      "tag": "Сезонный выбор"
+      "article": "Yarbo-S1",
+      "price": 880000,
+      "description": "Готовый роботизированный снегоуборщик для дорожек, подъездных путей и открытых площадок.",
+      "image": "yarbo-snow-robot.jpg",
+      "tag": "Главный сезонный выбор"
     },
     {
-      "title": "Зима + лето",
-      "name": "Yarbo 2 в 1",
-      "description": "Одна база, снегоуборщик и газонокосилка Pro. Уход за территорией в два сезона.",
-      "image": "bundle.webp",
-      "tag": "Два модуля"
+      "title": "Лето",
+      "name": "Yarbo Lawn Mower PRO",
+      "article": "Yarbo-M1PRO",
+      "price": 880000,
+      "description": "Готовая конфигурация Yarbo PRO с газонокосильным модулем для регулярного ухода за газоном.",
+      "image": "yarbo-mower-pro.jpg",
+      "tag": "Готовый робот"
+    }
+  ],
+  "catalog_products": [
+    {
+      "category": "Навесное оборудование",
+      "name": "Модуль Отвал Yarbo",
+      "article": "C010110002",
+      "price": 41800,
+      "description": "Отвал для сдвигания снега. Совместимость и крепление подтверждаются для выбранной версии Yarbo.",
+      "image": "module-plow.jpg",
+      "tag": "Зима"
     },
     {
-      "title": "Круглый год",
-      "name": "Модульная система",
-      "description": "Конфигурация с навесным оборудованием под сезонные задачи вашего участка.",
-      "image": "all-season.webp",
-      "tag": "Индивидуальный подбор"
+      "category": "Навесное оборудование",
+      "name": "Модуль триммер для робота Yarbo",
+      "article": "Yarbo-T",
+      "price": 150000,
+      "description": "Модуль для обработки кромок и труднодоступных участков территории.",
+      "image": "module-trimmer.jpg",
+      "tag": "Кромки"
+    },
+    {
+      "category": "Навесное оборудование",
+      "name": "Модуль воздуходувка для робота Yarbo",
+      "article": "Yarbo-B1",
+      "price": 220000,
+      "description": "Воздуходувный модуль для уборки листьев и лёгкого мусора.",
+      "image": "module-blower.jpg",
+      "tag": "Осень"
+    },
+    {
+      "category": "Навесное оборудование",
+      "name": "Модуль газонокосилка для робота Yarbo PRO",
+      "article": "Yarbo-M1",
+      "price": 290000,
+      "description": "Газонокосильный модуль для платформы Yarbo PRO.",
+      "image": "module-mower.jpg",
+      "tag": "Весна и лето"
+    },
+    {
+      "category": "Навесное оборудование",
+      "name": "Модуль снегоуборщик для робота Yarbo",
+      "article": "Yarbo-Snow",
+      "price": 290000,
+      "description": "Снегоуборочный модуль для совместимой роботизированной базы Yarbo.",
+      "image": "module-snow.jpg",
+      "tag": "Зима"
+    },
+    {
+      "category": "Готовый робот",
+      "name": "Беспроводной робот Yarbo Core",
+      "article": "YARBO-CORE",
+      "price": 590000,
+      "description": "Базовая беспроводная роботизированная платформа Yarbo.",
+      "image": "yarbo-core.jpg",
+      "tag": "База"
+    },
+    {
+      "category": "Готовый робот",
+      "name": "Беспроводной робот газонокосилка Yarbo PRO",
+      "article": "Yarbo-M1PRO",
+      "price": 880000,
+      "description": "Готовый беспроводной робот для автоматизированного ухода за газоном.",
+      "image": "yarbo-mower-pro.jpg",
+      "tag": "Лето"
+    },
+    {
+      "category": "Готовый робот",
+      "name": "Беспроводной робот снегоуборщик Yarbo",
+      "article": "Yarbo-S1",
+      "price": 880000,
+      "description": "Готовый беспроводной робот с установленным снегоуборочным оборудованием.",
+      "image": "yarbo-snow-robot.jpg",
+      "tag": "Зима"
     }
   ],
   "modules": [
     {
-      "name": "Snow Blower",
+      "name": "Модуль снегоуборщик",
+      "article": "Yarbo-Snow",
       "season": "Зима",
-      "description": "Двухступенчатая система уборки снега с управлением направлением выброса.",
-      "image": "snow-module.webp"
+      "price": 290000,
+      "description": "Снегоуборочный модуль для совместимой базы Yarbo.",
+      "image": "module-snow.jpg"
     },
     {
-      "name": "Lawn Mower Pro",
+      "name": "Модуль газонокосилка PRO",
+      "article": "Yarbo-M1",
       "season": "Весна и лето",
-      "description": "Газонокосильный модуль для регулярного ухода за газоном по расписанию.",
-      "image": "mower.webp"
+      "price": 290000,
+      "description": "Газонокосильный модуль для платформы Yarbo PRO.",
+      "image": "module-mower.jpg"
     },
     {
-      "name": "Blower",
+      "name": "Модуль воздуходувка",
+      "article": "Yarbo-B1",
       "season": "Осень",
-      "description": "Сбор листьев и лёгкого мусора направленным потоком воздуха.",
-      "image": "blower.webp"
+      "price": 220000,
+      "description": "Воздуходувный модуль для листьев и лёгкого мусора.",
+      "image": "module-blower.jpg"
     },
     {
-      "name": "Trimmer",
-      "season": "Уход за кромками",
-      "description": "Обработка кромок газона. Совместимость с базой и косилкой уточняется при подборе.",
-      "image": "trimmer.webp"
+      "name": "Модуль триммер",
+      "article": "Yarbo-T",
+      "season": "Кромки",
+      "price": 150000,
+      "description": "Модуль для обработки кромок и труднодоступных мест.",
+      "image": "module-trimmer.jpg"
+    },
+    {
+      "name": "Модуль отвал",
+      "article": "C010110002",
+      "season": "Зима",
+      "price": 41800,
+      "description": "Отвал для сдвигания снега. Крепление зависит от версии платформы.",
+      "image": "module-plow.jpg"
     }
   ],
   "specifications": [
-    [
-      "Рабочая ширина",
-      "61 см"
-    ],
-    [
-      "Высота захвата снега",
-      "30,5 см"
-    ],
-    [
-      "Дальность выброса",
-      "1,8–12,2 м"
-    ],
-    [
-      "Навигация",
-      "RTK-GPS и датчики окружения"
-    ]
+    ["Рабочая ширина Snow Blower", "61 см"],
+    ["Высота захвата снега", "30,5 см"],
+    ["Дальность выброса", "1,8–12,2 м"],
+    ["Навигация", "RTK-GPS и датчики окружения"]
   ]
 }
