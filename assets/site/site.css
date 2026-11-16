@@ -1415,7 +1415,7 @@ td {
 .brand {
   width: clamp(190px, 21vw, 280px);
   height: 64px;
-  background: url("images/logo.jpg") center / contain no-repeat;
+  background: #0d1714 url("images/logo.png") center / 72% auto no-repeat;
 }
 .brand > svg,
 .brand > span { visibility: hidden; }
