@@ -1411,16 +1411,21 @@ td {
 @media(max-width:599px) {
   .catalog-grid { grid-template-columns: 1fr; }
 }
-/* Display the supplied FutureKinetix logo in the existing header markup. */
+/* Display the supplied transparent FutureKinetix logo in the header. */
 .brand {
   width: clamp(190px, 21vw, 280px);
   height: 64px;
-  background: #0d1714 url("images/logo.png") center / 72% auto no-repeat;
+  padding: 10px 18px;
+  background: #0d1714;
+  border-radius: 12px;
 }
-.brand > svg,
-.brand > span { visibility: hidden; }
+.brand__logo {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
 @media(max-width:699px) {
-  .brand { width: 190px; height: 52px; }
+  .brand { width: 190px; height: 52px; padding: 8px 14px; }
 }
 
 
