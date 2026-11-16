@@ -1351,3 +1351,69 @@ td {
 .source-details ul { overflow-wrap: anywhere; }
 .service .editorial-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
 @media(max-width:699px) { .service .editorial-grid { grid-template-columns: 1fr; } }
+/* FutureKinetix supplied brand assets. */
+.brand__logo {
+  display: block;
+  width: clamp(190px, 21vw, 280px);
+  height: auto;
+  object-fit: contain;
+}
+@media(max-width:699px) {
+  .brand__logo { width: 190px; }
+}
+.catalog-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--space-4);
+}
+.catalog-card {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  border: 1px solid var(--line);
+  background: var(--paper);
+}
+.catalog-card__media {
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
+  padding: var(--space-4);
+  background: #fff;
+  border-bottom: 1px solid var(--line);
+}
+.catalog-card__media img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+.catalog-card__body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  padding: var(--space-4);
+}
+.catalog-card__body h3 { margin: 10px 0 8px; }
+.catalog-card__body p { margin: 0; color: var(--muted); font-size: var(--type-sm); }
+.catalog-card__meta {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: auto;
+  padding-top: var(--space-4);
+  color: var(--muted);
+  font-size: var(--type-xs);
+}
+.catalog-card__meta strong {
+  color: var(--ink);
+  font-size: 18px;
+  white-space: nowrap;
+}
+.catalog-card .text-link { margin-top: var(--space-3); }
+.catalog-note { margin-top: var(--space-4); }
+@media(max-width:999px) {
+  .catalog-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media(max-width:599px) {
+  .catalog-grid { grid-template-columns: 1fr; }
+}
