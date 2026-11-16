@@ -34,13 +34,6 @@ def price_label(item):
     average = round(mean(item['prices']) / 100) * 100 if len(item['prices']) > 1 else item['prices'][0]
     return ('≈ ' if len(item['prices']) > 1 else '') + rub(average)
 
-def source_details(item):
-    if not item['prices']:
-        sources = ''.join(f'<li><a href="{escape(url)}" target="_blank" rel="noopener">Открыть каталог ↗</a></li>' for url in item['sources'])
-        return f'<details class="source-details"><summary>Цена в каталоге не указана</summary><ul>{sources}</ul></details>'
-    sources = ''.join(f'<li><a href="{escape(url)}" target="_blank" rel="noopener">Предложение {n+1} ↗</a> — {rub(item["prices"][n])}</li>' for n,url in enumerate(item['sources'][:len(item['prices'])]))
-    label = f'Среднее по {len(item["prices"])} предложениям' if len(item['prices']) > 1 else 'Цена каталога'
-    return f'<details class="source-details"><summary>{label}: источник</summary><ul>{sources}</ul></details>'
 
 def accessory_content(data):
     icons = {
@@ -53,9 +46,9 @@ def accessory_content(data):
     for i,item in enumerate(data['items']):
         if i < 3:
             icon = f'<svg class="attachment-icon" viewBox="0 0 32 32" aria-hidden="true"><path d="{icons[item["icon"]]}"/></svg>'
-            cards.append(f'<article class="attachment-card">{icon}<span class="eyebrow">{escape(item["kind"])}</span><h3>{escape(item["name"])}</h3><p class="attachment-model">{escape(item["model"])}</p><p>{escape(item["description"])}</p><div class="attachment-price">{price_label(item)}</div>{source_details(item)}<a class="text-link" href="#contact">Подобрать оснастку ↗</a></article>')
+            cards.append(f'<article class="attachment-card">{icon}<span class="eyebrow">{escape(item["kind"])}</span><h3>{escape(item["name"])}</h3><p class="attachment-model">{escape(item["model"])}</p><p>{escape(item["description"])}</p><div class="attachment-price">{price_label(item)}</div><a class="text-link" href="#contact">Подобрать оснастку ↗</a></article>')
         else:
-            rows.append(f'<tr><th scope="row"><strong>{escape(item["name"])}</strong><span>{escape(item["description"])}</span></th><td>{price_label(item)}</td><td>{source_details(item)}</td></tr>')
+            rows.append(f'<tr><th scope="row"><strong>{escape(item["name"])}</strong><span>{escape(item["description"])}</span></th><td>{price_label(item)}</td><td>Совместимость и состав уточняются</td></tr>')
     return ''.join(cards), ''.join(rows)
 
 def catalog_product_content(data):
@@ -92,7 +85,7 @@ def main():
     (dist/'.nojekyll').touch()
     for path,source,title,description in PAGES:
         nav = ''.join(f'<a href="{href}"'+(' aria-current="page"' if path == href else '')+f'>{label}</a>' for href,label in NAVIGATION)
-        content = render(source, configurations=''.join(cards), modules=''.join(modules), catalog_products=catalog_products, specifications=specs, accessory_cards=accessory_cards, accessory_rows=accessory_rows, price_method=escape(accessories['method']), price_date=escape(products['checked_at']))
+        content = render(source, configurations=''.join(cards), modules=''.join(modules), catalog_products=catalog_products, specifications=specs, accessory_cards=accessory_cards, accessory_rows=accessory_rows, price_method=escape(accessories['method']), price_date=escape(products.get('updated_at', '')))
         html = render('layout.html', title=title, description=description, page=path[:-5], content=content, navigation=nav)
         html = html.replace('↗', ARROW).replace('↓', '<svg class="arrow-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v18M5 14l7 7 7-7"/></svg>')
         (ROOT/path).write_text(html)
