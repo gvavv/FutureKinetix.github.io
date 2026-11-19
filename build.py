@@ -19,8 +19,42 @@ PAGES = [
     ('company.html', 'company.html', 'О компании | FutureKinetix', 'Поставка роботов, инженерная разработка и сопровождение роботизированных систем.'),
     ('contacts.html', 'contacts.html', 'Контакты | FutureKinetix', 'Связаться с FutureKinetix по вопросам оборудования, разработки и сервиса.'),
 ]
-NAVIGATION = [('yarbo.html','Yarbo'), ('products.html','Роботы'), ('automation.html','Решения'), ('service.html','Сервис'), ('company.html','Компания'), ('contacts.html','Контакты')]
+NAVIGATION_GROUPS = [
+    ('Продукты', [
+        ('yarbo.html', 'Yarbo', 'Модульные роботы для территории'),
+        ('products.html', 'Другие роботы', 'Доставка, склад, сервис и уборка'),
+        ('humanoids.html', 'Гуманоиды', 'Прикладные сценарии и интеграция'),
+    ]),
+    ('Решения', [
+        ('automation.html', 'Индивидуальная автоматизация', 'Роботизация под процесс заказчика'),
+        ('service.html', 'Установка и сервис', 'Запуск, настройка и сопровождение'),
+    ]),
+    ('Компания', [
+        ('company.html', 'О компании', 'Команда и выполненные проекты'),
+        ('contacts.html', 'Контакты', 'Обсудить задачу и получить подбор'),
+    ]),
+]
 ARROW = '<svg class="arrow-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 19 19 5M5 5h14v14"/></svg>'
+
+def navigation_markup(current_path):
+    groups = []
+    for label, links in NAVIGATION_GROUPS:
+        current = any(path == current_path for path, *_ in links)
+        items = []
+        for path, link_label, description in links:
+            current_attr = ' aria-current="page"' if path == current_path else ''
+            items.append(
+                f'<a href="{path}"{current_attr}>'
+                f'<strong>{link_label}</strong><span>{description}</span></a>'
+            )
+        current_class = ' nav-group--current' if current else ''
+        groups.append(
+            f'<details class="nav-group{current_class}">'
+            f'<summary>{label}<svg viewBox="0 0 18 18" aria-hidden="true"><path d="m4 7 5 5 5-5"/></svg></summary>'
+            f'<div class="nav-menu">{"".join(items)}</div></details>'
+        )
+    groups.append('<a class="button button--small nav-cta" href="contacts.html#contact">Обсудить задачу <span aria-hidden="true">↗</span></a>')
+    return ''.join(groups)
 
 def render(name, **values):
     return Template((ROOT/'src'/name).read_text()).substitute(**values)
@@ -84,7 +118,7 @@ def main():
     shutil.copytree(ROOT/'assets/site', dist/'assets/site')
     (dist/'.nojekyll').touch()
     for path,source,title,description in PAGES:
-        nav = ''.join(f'<a href="{href}"'+(' aria-current="page"' if path == href else '')+f'>{label}</a>' for href,label in NAVIGATION)
+        nav = navigation_markup(path)
         content = render(source, configurations=''.join(cards), modules=''.join(modules), catalog_products=catalog_products, specifications=specs, accessory_cards=accessory_cards, accessory_rows=accessory_rows, price_method=escape(accessories['method']), price_date=escape(products.get('updated_at', '')))
         html = render('layout.html', title=title, description=description, page=path[:-5], content=content, navigation=nav)
         html = html.replace('↗', ARROW).replace('↓', '<svg class="arrow-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v18M5 14l7 7 7-7"/></svg>')
